@@ -10,7 +10,8 @@ app.get("/healthz", (_req, res) => res.send("ok"));
 
 app.get("/api/repartir", (req, res) => {
   try {
-    const r = repartir(Number(req.query.cuenta), Number(req.query.propina ?? 15), Number(req.query.personas));
+    const r = repartir(Number(req.query.cuenta), Number(req.query.propina ?? 15), Number(req.query.personas),
+      { redondear: req.query.redondear === "1" });
     res.json({ ...r, partesEnPesos: r.partes.map(pesos), totalEnPesos: pesos(r.total) });
   } catch (e) {
     res.status(400).json({ error: e.message });
@@ -44,6 +45,7 @@ app.get("/", (_req, res) => {
     <label>Cuenta ($)<input id="cuenta" type="number" min="0" step="0.01" value="100"></label>
     <label>Propina (%)<input id="propina" type="number" min="0" step="0.5" value="15"></label>
     <label>Personas<input id="personas" type="number" min="1" step="1" value="3"></label>
+    <label style="grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 8px"><input id="redondear" type="checkbox"> Redondear el total al peso</label>
   </form>
   <ol id="partes"></ol>
   <div class="total" id="total"></div>
@@ -51,7 +53,7 @@ app.get("/", (_req, res) => {
 </main>
 <script>
   const calc = async () => {
-    const q = new URLSearchParams({ cuenta: cuenta.value, propina: propina.value, personas: personas.value });
+    const q = new URLSearchParams({ cuenta: cuenta.value, propina: propina.value, personas: personas.value, redondear: redondear.checked ? "1" : "0" });
     const r = await (await fetch("/api/repartir?" + q)).json();
     partes.innerHTML = r.error ? "" : r.partesEnPesos.map((p) => "<li>" + p + "</li>").join("");
     total.textContent = r.error ? r.error : "Total con propina: " + r.totalEnPesos;
