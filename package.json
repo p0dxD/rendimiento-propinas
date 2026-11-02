@@ -1,0 +1,15 @@
+{
+  "name": "rendimiento-propinas",
+  "version": "1.0.0",
+  "description": "Reparte la cuenta y la propina entre amigos, al centavo.",
+  "type": "module",
+  "main": "server.js",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
