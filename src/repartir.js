@@ -16,18 +16,18 @@ export function repartir(cuenta, propina, personas, { redondear = false } = {}) 
   if (!(cuenta >= 0) || !(propina >= 0)) {
     throw new RangeError("la cuenta y la propina no pueden ser negativas");
   }
-  let deLaPropina = (cuenta * propina) / 100;
+  // Todo en centavos enteros, para que las partes sumen exactamente el total.
+  const cuentaC = Math.round(cuenta * 100);
+  let propinaC = Math.round((cuentaC * propina) / 100);
   if (redondear) {
-    deLaPropina = Math.ceil(cuenta + deLaPropina) - cuenta;
+    propinaC = Math.ceil((cuentaC + propinaC) / 100) * 100 - cuentaC;
   }
-  const total = cuenta + deLaPropina;
-  const parte = Math.round((total / personas) * 100) / 100;
-  return {
-    cuenta: Math.round(cuenta * 100),
-    propina: Math.round(deLaPropina * 100),
-    total: Math.round(total * 100),
-    partes: Array(personas).fill(Math.round(parte * 100)),
-  };
+  const total = cuentaC + propinaC;
+  const base = Math.floor(total / personas);
+  const sobran = total - base * personas;
+  // Los centavos sobrantes se dan de uno en uno, empezando por la primera persona.
+  const partes = Array.from({ length: personas }, (_, i) => base + (i < sobran ? 1 : 0));
+  return { cuenta: cuentaC, propina: propinaC, total, partes };
 }
 
 /** Centavos como pesos: 3834 → "$38.34". */
