@@ -28,6 +28,12 @@ test("personas inválidas", () => {
   assert.throws(() => repartir(100, 10, 2.5), RangeError);
 });
 
+test("propina redondeada: el total cierra al peso", () => {
+  const r = repartir(97.3, 15, 2, { redondear: true });
+  assert.equal(r.total, 11200);
+  assert.deepEqual(r.partes, [5600, 5600]);
+});
+
 test("pesos", () => {
   assert.equal(pesos(3834), "$38.34");
   assert.equal(pesos(5), "$0.05");
