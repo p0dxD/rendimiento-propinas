@@ -12,3 +12,14 @@ services:
   test:
     command: npm ci && npm test
     image: node:20-bookworm
+# Las pruebas de navegador (e2e/): rendimiento construye su imagen con cada
+# versión y las corre una vez que la versión está en vivo. Cada prueba solo
+# avisa hasta que pasa 5 versiones seguidas; luego, si falla, revierte.
+builds:
+- name: e2e
+  path: e2e
+tests:
+  build: e2e
+# Cada solicitud de incorporación tiene su copia en vivo, en
+# rendimiento-propinas-pr-<número>.rendimiento.ai, hasta que se cierra.
+previews: {}

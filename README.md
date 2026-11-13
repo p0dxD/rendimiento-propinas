@@ -4,6 +4,7 @@ Una página para repartir la cuenta y la propina entre amigos, al centavo: todo 
 
 - `npm start`: el servidor en el puerto `PORT` (3000 si no se dice).
 - `npm test`: las pruebas.
+- `cd e2e && npm ci && npx playwright test`: las pruebas de navegador, contra `BASE_URL` (http://localhost:3000 si no se dice). rendimiento las corre contra cada versión ya en vivo.
 - `GET /api/repartir?cuenta=100&propina=15&personas=3`: el reparto en JSON.
 
 Desplegada con [rendimiento.ai](https://rendimiento.ai).
